@@ -83,14 +83,6 @@
                         <span class="text-xs mt-1">Home</span>
                     </a>
 
-                    <!-- Add Button -->
-                    <button onclick="document.getElementById('add-entry-form').submit();" class="flex flex-col items-center justify-center text-gray-600 hover:text-emerald-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        <span class="text-xs mt-1">Add</span>
-                    </button>
-
                     <!-- Profile -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex flex-col items-center justify-center text-gray-600 hover:text-emerald-600">
@@ -116,10 +108,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Hidden Add Entry Form -->
-            <form id="add-entry-form" action="{{ url_for('add_cigarette') }}" method="POST" class="hidden">
-            </form>
             {% endif %}
 
             <!-- Desktop Navigation -->
