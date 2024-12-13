@@ -14,7 +14,15 @@ app.config.from_object('config.Config')
 
 # Initialize extensions
 db.init_app(app)
+
+# Create tables if they don't exist
+with app.app_context():
+    db.create_all()
+    
+# Initialize Flask-Migrate
 migrate = Migrate(app, db)
+
+# Initialize Login Manager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
