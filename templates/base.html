@@ -95,11 +95,36 @@
                         <!-- Profile Dropdown -->
                         <div x-show="open" 
                              @click.away="open = false"
-                             class="absolute bottom-full right-0 mb-2 w-48 bg-white rounded-lg shadow-lg py-2">
+                             class="absolute bottom-full right-0 mb-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
                             <div class="px-4 py-2 text-sm text-gray-500">
                                 Signed in as<br>
                                 <span class="font-medium text-gray-900">{{ current_user.email }}</span>
                             </div>
+
+                            {% if current_user.is_admin %}
+                            <div class="border-t border-gray-100"></div>
+                            <div class="px-2 py-2">
+                                <a href="{{ url_for('admin_dashboard') }}" 
+                                   class="block px-2 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-md">
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                        </svg>
+                                        Admin Dashboard
+                                    </div>
+                                </a>
+                                <a href="{{ url_for('admin_users') }}" 
+                                   class="block px-2 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-md">
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                        </svg>
+                                        Manage Users
+                                    </div>
+                                </a>
+                            </div>
+                            {% endif %}
+
                             <div class="border-t border-gray-100"></div>
                             <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                                 Sign out
@@ -117,7 +142,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     {% if current_user.is_authenticated %}
-                    <div class="relative" x-data="{ open: false, editMode: false }">
+                    <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center space-x-2 text-gray-700 hover:text-emerald-600">
                             <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-semibold">
                                 {{ current_user.name[0] | upper }}
@@ -127,16 +152,39 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
+
+                        <!-- Profile Dropdown Menu -->
                         <div x-show="open" 
                              @click.away="open = false"
                              class="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg py-2 z-50">
-                            <!-- User Info Section -->
+                            <!-- User Info -->
                             <div class="px-4 py-3">
                                 <p class="text-sm text-gray-500">Signed in as</p>
                                 <p class="text-sm font-medium text-gray-900">{{ current_user.email }}</p>
                             </div>
 
-                            <!-- Smoking Details -->
+                            <!-- Admin Links -->
+                            {% if current_user.is_admin %}
+                            <div class="border-t border-gray-100"></div>
+                            <div class="px-4 py-2">
+                                <a href="{{ url_for('admin_dashboard') }}" 
+                                   class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-md">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                    Admin Dashboard
+                                </a>
+                                <a href="{{ url_for('admin_users') }}" 
+                                   class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-md">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                    Manage Users
+                                </a>
+                            </div>
+                            {% endif %}
+
+                            <!-- User Details -->
                             <div class="border-t border-gray-100 px-4 py-3">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
@@ -188,79 +236,13 @@
                                 </div>
                             </div>
 
-                            <!-- Edit Profile Button -->
-                            <div class="border-t border-gray-100 px-4 py-3">
-                                <button @click="editMode = !editMode" 
-                                        class="w-full text-left px-3 py-2 text-sm text-emerald-600 hover:bg-emerald-50 rounded-md">
-                                    {{ 'Save Changes' if editMode else 'Edit Profile' }}
-                                </button>
-                            </div>
-
-                            <!-- Edit Form -->
-                            <div x-show="editMode" class="border-t border-gray-100 px-4 py-3">
-                                <form action="{{ url_for('update_profile') }}" method="POST" class="space-y-4">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm text-gray-500">Name</label>
-                                            <input type="text" name="name" value="{{ current_user.name }}" 
-                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm text-gray-500">Age</label>
-                                            <input type="number" name="age" value="{{ current_user.age }}" 
-                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm text-gray-500">Smoking Since (years)</label>
-                                            <input type="number" name="smoking_since" value="{{ current_user.smoking_since }}" 
-                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm text-gray-500">Daily Target</label>
-                                            <input type="number" name="daily_cigarettes" value="{{ current_user.daily_cigarettes }}" 
-                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm text-gray-500">Cost per Cigarette</label>
-                                            <input type="number" step="0.01" name="cigarette_cost" value="{{ current_user.cigarette_cost }}" 
-                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm text-gray-500">Pack Cost</label>
-                                            <input type="number" step="0.01" name="pack_cost" value="{{ current_user.pack_cost }}" 
-                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm text-gray-500">Cigarettes per Pack</label>
-                                        <input type="number" name="cigarettes_per_pack" value="{{ current_user.cigarettes_per_pack }}" 
-                                            class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                    </div>
-
-                                    <div class="flex justify-end space-x-3">
-                                        <button type="button" @click="editMode = false" 
-                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" 
-                                            class="px-3 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                                            Save Changes
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
                             <!-- Logout -->
                             <div class="border-t border-gray-100">
                                 <a href="{{ url_for('logout') }}" 
-                                   class="block px-4 py-3 text-sm text-red-600 hover:bg-red-50">
+                                   class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
                                     Sign out
                                 </a>
                             </div>

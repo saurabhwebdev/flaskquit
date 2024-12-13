@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, CigaretteEntry
+from flask_migrate import Migrate
+from functools import wraps
+from sqlalchemy import func
 import os
 from datetime import datetime, timedelta
 import pytz
@@ -11,6 +14,7 @@ app.config.from_object('config.Config')
 
 # Initialize extensions
 db.init_app(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -263,6 +267,94 @@ def edit_cigarette(entry_id):
         flash('Error updating entry', 'error')
     
     return redirect(url_for('dashboard'))
+
+# Admin required decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_admin:
+            flash('Access denied. Admin privileges required.', 'error')
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/admin/dashboard')
+@login_required
+@admin_required
+def admin_dashboard():
+    # Get basic stats
+    total_users = User.query.count()
+    total_entries = CigaretteEntry.query.count()
+    active_today = db.session.query(func.count(func.distinct(CigaretteEntry.user_id))).filter(
+        func.date(CigaretteEntry.timestamp) == datetime.utcnow().date()
+    ).scalar()
+
+    # Get user registration trends (last 7 days)
+    registration_data = []
+    for i in range(7):
+        date = datetime.utcnow().date() - timedelta(days=i)
+        count = User.query.filter(
+            func.date(User.created_at) == date
+        ).count()
+        registration_data.append({
+            'date': date.strftime('%Y-%m-%d'),
+            'count': count
+        })
+
+    # Get most active users
+    most_active_users = db.session.query(
+        User,
+        func.count(CigaretteEntry.id).label('entry_count')
+    ).join(CigaretteEntry).group_by(User).order_by(
+        func.count(CigaretteEntry.id).desc()
+    ).limit(5).all()
+
+    # Get recent registrations
+    recent_users = User.query.order_by(User.created_at.desc()).limit(10).all()
+
+    # Get activity by hour (last 24 hours) - SQLite compatible version
+    hourly_activity = []
+    now = datetime.utcnow()
+    for i in range(24):
+        hour_start = now - timedelta(hours=i)
+        hour_end = hour_start + timedelta(hours=1)
+        count = CigaretteEntry.query.filter(
+            CigaretteEntry.timestamp >= hour_start,
+            CigaretteEntry.timestamp < hour_end
+        ).count()
+        hourly_activity.append({
+            'hour': hour_start.strftime('%H:00'),
+            'count': count
+        })
+
+    # Reverse the hourly activity to show most recent first
+    hourly_activity.reverse()
+
+    return render_template('admin/dashboard.html',
+                         total_users=total_users,
+                         total_entries=total_entries,
+                         active_today=active_today,
+                         registration_data=registration_data,
+                         most_active_users=most_active_users,
+                         recent_users=recent_users,
+                         hourly_activity=hourly_activity)
+
+@app.route('/admin/users')
+@login_required
+@admin_required
+def admin_users():
+    users = User.query.order_by(User.created_at.desc()).all()
+    return render_template('admin/users.html', users=users)
+
+@app.route('/admin/make_admin/<int:user_id>', methods=['POST'])
+@login_required
+@admin_required
+def make_admin(user_id):
+    user = User.query.get_or_404(user_id)
+    user.is_admin = True
+    db.session.commit()
+    flash(f'Made {user.email} an admin.', 'success')
+    return redirect(url_for('admin_users'))
 
 if __name__ == '__main__':
     app.run(debug=True) 

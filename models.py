@@ -10,17 +10,19 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    smoking_since = db.Column(db.Integer, nullable=False)  # Years
-    daily_cigarettes = db.Column(db.Integer, nullable=False)
-    cigarette_cost = db.Column(db.Float, nullable=False)
+    age = db.Column(db.Integer)
+    smoking_since = db.Column(db.Integer)
+    daily_cigarettes = db.Column(db.Integer)
+    cigarette_cost = db.Column(db.Float)
     currency = db.Column(db.String(3), default='INR')
-    pack_cost = db.Column(db.Float, nullable=False)
-    cigarettes_per_pack = db.Column(db.Integer, nullable=False)
+    pack_cost = db.Column(db.Float)
+    cigarettes_per_pack = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Relationship with cigarette entries
+    is_admin = db.Column(db.Boolean, default=False)
     entries = db.relationship('CigaretteEntry', backref='user', lazy=True)
+
+    def __repr__(self):
+        return f'<User {self.email}>'
 
 class CigaretteEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
