@@ -1,0 +1,3 @@
+2024-12-13 16:18:22,366 INFO: Cigarette Tracker startup [in C:\WebDev\CTF\app.py:36]
+2024-12-13 16:18:22,404 INFO: Database initialized successfully [in C:\WebDev\CTF\app.py:44]
+2024-12-13 16:18:22,424 INFO: Database tables created successfully [in C:\WebDev\CTF\app.py:53]

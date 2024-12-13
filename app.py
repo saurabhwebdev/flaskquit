@@ -8,17 +8,53 @@ from sqlalchemy import func
 import os
 from datetime import datetime, timedelta
 import pytz
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
+
+# Configure logging
+if not app.debug:
+    # Create logs directory if it doesn't exist
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    
+    # Set up file handler
+    file_handler = RotatingFileHandler('logs/cigarette_tracker.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    
+    # Set up console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    app.logger.addHandler(console_handler)
+    
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Cigarette Tracker startup')
+
+# Load configuration
 app.config.from_object('config.Config')
 
 # Initialize extensions
-db.init_app(app)
+try:
+    db.init_app(app)
+    app.logger.info('Database initialized successfully')
+except Exception as e:
+    app.logger.error(f'Error initializing database: {str(e)}')
+    raise
 
 # Create tables if they don't exist
 with app.app_context():
-    db.create_all()
-    
+    try:
+        db.create_all()
+        app.logger.info('Database tables created successfully')
+    except Exception as e:
+        app.logger.error(f'Error creating database tables: {str(e)}')
+        raise
+
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
@@ -29,7 +65,21 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        return User.query.get(int(user_id))
+    except Exception as e:
+        app.logger.error(f'Error loading user {user_id}: {str(e)}')
+        return None
+
+@app.errorhandler(500)
+def internal_error(error):
+    app.logger.error(f'Server Error: {str(error)}')
+    db.session.rollback()
+    return render_template('errors/500.html'), 500
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('errors/404.html'), 404
 
 @app.route('/')
 def index():
