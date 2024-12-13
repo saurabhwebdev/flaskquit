@@ -364,5 +364,54 @@ def make_admin(user_id):
     flash(f'Made {user.email} an admin.', 'success')
     return redirect(url_for('admin_users'))
 
+@app.route('/create-admin/<token>', methods=['GET', 'POST'])
+def create_admin(token):
+    # Check if the token matches the environment variable or a default value
+    secret_token = os.getenv('ADMIN_CREATE_TOKEN', 'quitpuff_secret_token_2024')
+    if token != secret_token:
+        return "Invalid token", 403
+
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        name = request.form.get('name')
+
+        try:
+            # Check if user exists
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                if existing_user.is_admin:
+                    flash('User is already an admin!', 'info')
+                else:
+                    existing_user.is_admin = True
+                    db.session.commit()
+                    flash('Made existing user an admin!', 'success')
+            else:
+                # Create new admin user
+                admin = User(
+                    name=name,
+                    email=email,
+                    password=generate_password_hash(password),
+                    age=30,
+                    smoking_since=0,
+                    daily_cigarettes=0,
+                    cigarette_cost=0.0,
+                    currency='INR',
+                    pack_cost=0.0,
+                    cigarettes_per_pack=0,
+                    is_admin=True
+                )
+                db.session.add(admin)
+                db.session.commit()
+                flash('Successfully created admin user!', 'success')
+
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error: {str(e)}', 'error')
+
+    return render_template('admin/create_admin.html')
+
 if __name__ == '__main__':
     app.run(debug=True) 
