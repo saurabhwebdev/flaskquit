@@ -3,17 +3,11 @@
 {% block content %}
 <div class="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-6xl">
-        <!-- App Logo/Name -->
-        <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-emerald-600 mb-2">QuitTrack</h1>
-            <p class="text-lg text-gray-600">Your Journey to a Smoke-Free Life Starts Here</p>
-        </div>
-
         <div class="flex flex-col lg:flex-row gap-12">
             <!-- Left side: App Features -->
             <div class="flex-1 space-y-8 px-4">
                 <div class="text-center lg:text-left">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Take Control of Your Smoking Habits</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Take Control of Your Habits</h2>
                 </div>
 
                 <!-- Feature Grid -->
@@ -28,7 +22,7 @@
                             </div>
                             <h3 class="ml-4 text-lg font-medium text-gray-900">Track Progress</h3>
                         </div>
-                        <p class="text-gray-600">Monitor your daily smoking habits and visualize your journey to quitting.</p>
+                        <p class="text-gray-600">Monitor your daily habits and visualize your journey.</p>
                     </div>
 
                     <!-- Feature 2 -->
@@ -41,7 +35,7 @@
                             </div>
                             <h3 class="ml-4 text-lg font-medium text-gray-900">Cost Insights</h3>
                         </div>
-                        <p class="text-gray-600">See how much money you're saving by reducing your cigarette consumption.</p>
+                        <p class="text-gray-600">Track your savings and understand your spending patterns.</p>
                     </div>
 
                     <!-- Feature 3 -->
@@ -54,7 +48,7 @@
                             </div>
                             <h3 class="ml-4 text-lg font-medium text-gray-900">Daily Goals</h3>
                         </div>
-                        <p class="text-gray-600">Set and achieve your daily smoking reduction targets.</p>
+                        <p class="text-gray-600">Set and achieve your daily targets with ease.</p>
                     </div>
 
                     <!-- Feature 4 -->
@@ -67,7 +61,7 @@
                             </div>
                             <h3 class="ml-4 text-lg font-medium text-gray-900">Detailed Reports</h3>
                         </div>
-                        <p class="text-gray-600">Get insights with comprehensive reports and analytics.</p>
+                        <p class="text-gray-600">Get insights with comprehensive analytics.</p>
                     </div>
                 </div>
 
@@ -93,27 +87,41 @@
                 <div class="sm:mx-auto sm:w-full sm:max-w-md mb-6">
                     <h2 class="text-center text-2xl font-bold text-gray-900">Welcome Back</h2>
                     <p class="mt-2 text-center text-sm text-gray-600">
-                        Continue your journey to a healthier life
+                        Sign in to continue to your dashboard
                     </p>
                 </div>
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-50 text-red-700{% else %}bg-emerald-50 text-emerald-700{% endif %} text-sm">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
                 <form class="space-y-6" method="POST">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
                         <div class="mt-1">
-                            <input id="email" name="email" type="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                            <input id="email" name="email" type="email" required 
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                         </div>
                     </div>
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <div class="mt-1">
-                            <input id="password" name="password" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                            <input id="password" name="password" type="password" required 
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                         </div>
                     </div>
 
                     <div>
-                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        <button type="submit" 
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                             Sign in
                         </button>
                     </div>
@@ -125,12 +133,13 @@
                             <div class="w-full border-t border-gray-300"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-white text-gray-500">New to QuitTrack?</span>
+                            <span class="px-2 bg-white text-gray-500">New here?</span>
                         </div>
                     </div>
 
                     <div class="mt-6">
-                        <a href="{{ url_for('signup') }}" class="w-full flex justify-center py-2 px-4 border border-emerald-300 rounded-md shadow-sm text-sm font-medium text-emerald-600 bg-white hover:bg-emerald-50">
+                        <a href="{{ url_for('signup') }}" 
+                            class="w-full flex justify-center py-2 px-4 border border-emerald-300 rounded-md shadow-sm text-sm font-medium text-emerald-600 bg-white hover:bg-emerald-50">
                             Create an account
                         </a>
                     </div>
@@ -148,10 +157,10 @@
                         <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">R</div>
                         <div class="ml-4">
                             <div class="font-medium text-gray-900">Rahul M.</div>
-                            <div class="text-sm text-gray-500">Smoke-free for 6 months</div>
+                            <div class="text-sm text-gray-500">Member for 6 months</div>
                         </div>
                     </div>
-                    <p class="text-gray-600">"QuitTrack helped me visualize my progress and stay motivated. The money-saving insights were eye-opening!"</p>
+                    <p class="text-gray-600">"The progress tracking and insights helped me stay motivated. The money-saving insights were eye-opening!"</p>
                 </div>
 
                 <!-- Testimonial 2 -->
@@ -160,10 +169,10 @@
                         <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">P</div>
                         <div class="ml-4">
                             <div class="font-medium text-gray-900">Priya S.</div>
-                            <div class="text-sm text-gray-500">Reduced by 80%</div>
+                            <div class="text-sm text-gray-500">Active member</div>
                         </div>
                     </div>
-                    <p class="text-gray-600">"The daily goals feature made it easy to gradually reduce my smoking. Best decision I've made for my health."</p>
+                    <p class="text-gray-600">"The daily goals feature made it easy to track my progress. Best decision I've made for my health."</p>
                 </div>
 
                 <!-- Testimonial 3 -->
@@ -172,10 +181,10 @@
                         <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">A</div>
                         <div class="ml-4">
                             <div class="font-medium text-gray-900">Amit K.</div>
-                            <div class="text-sm text-gray-500">Quit smoking completely</div>
+                            <div class="text-sm text-gray-500">Premium member</div>
                         </div>
                     </div>
-                    <p class="text-gray-600">"The detailed reports helped me understand my triggers and patterns. Now I'm completely smoke-free!"</p>
+                    <p class="text-gray-600">"The detailed reports helped me understand my patterns. Now I'm in complete control!"</p>
                 </div>
             </div>
         </div>
