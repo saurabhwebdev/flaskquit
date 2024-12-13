@@ -90,6 +90,52 @@ def login():
         flash('Invalid credentials')
     return render_template('auth/login.html')
 
+@app.route('/create-admin', methods=['POST'])
+def create_admin_form():
+    token = request.form.get('token')
+    if token != 'SAU@808rabh':
+        flash('Invalid admin token', 'error')
+        return redirect(url_for('login'))
+
+    return render_template('admin/create_admin.html')
+
+@app.route('/submit-admin', methods=['POST'])
+def submit_admin():
+    token = request.form.get('token')
+    if token != 'SAU@808rabh':
+        flash('Invalid admin token', 'error')
+        return redirect(url_for('login'))
+
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    if not all([name, email, password]):
+        flash('All fields are required', 'error')
+        return redirect(url_for('create_admin_form'))
+
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        flash('Email already exists', 'error')
+        return redirect(url_for('create_admin_form'))
+
+    new_admin = User(
+        name=name,
+        email=email,
+        password=generate_password_hash(password),
+        is_admin=True
+    )
+
+    try:
+        db.session.add(new_admin)
+        db.session.commit()
+        flash('Admin account created successfully', 'success')
+        return redirect(url_for('login'))
+    except Exception as e:
+        db.session.rollback()
+        flash('Error creating admin account', 'error')
+        return redirect(url_for('create_admin_form'))
+
 @app.route('/logout')
 @login_required
 def logout():

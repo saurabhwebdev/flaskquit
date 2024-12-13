@@ -37,6 +37,7 @@ def restore_database():
         pack_cost = db.Column(db.Float, nullable=False)
         cigarettes_per_pack = db.Column(db.Integer, nullable=False)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
+        is_admin = db.Column(db.Boolean, default=False)
         entries = db.relationship('CigaretteEntry', backref='user', lazy=True)
 
     class CigaretteEntry(db.Model):
@@ -76,7 +77,8 @@ def restore_database():
                     currency=user_data['currency'],
                     pack_cost=user_data['pack_cost'],
                     cigarettes_per_pack=user_data['cigarettes_per_pack'],
-                    created_at=datetime.fromisoformat(user_data['created_at'])
+                    created_at=datetime.fromisoformat(user_data['created_at']),
+                    is_admin=user_data.get('is_admin', False)  # Default to False if not present in backup
                 )
                 db.session.add(user)
             

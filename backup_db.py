@@ -26,7 +26,8 @@ def backup_database():
                 'currency': user.currency,
                 'pack_cost': float(user.pack_cost),
                 'cigarettes_per_pack': user.cigarettes_per_pack,
-                'created_at': user.created_at
+                'created_at': user.created_at,
+                'is_admin': user.is_admin
             }
             users_data.append(user_data)
         
