@@ -107,7 +107,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     {% if current_user.is_authenticated %}
-                    <div class="relative" x-data="{ open: false }">
+                    <div class="relative" x-data="{ open: false, editMode: false }">
                         <button @click="open = !open" class="flex items-center space-x-2 text-gray-700 hover:text-emerald-600">
                             <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-semibold">
                                 {{ current_user.name[0] | upper }}
@@ -119,11 +119,141 @@
                         </button>
                         <div x-show="open" 
                              @click.away="open = false"
-                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">Profile</a>
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">Settings</a>
-                            <div class="border-t border-gray-100 my-1"></div>
-                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600">Logout</a>
+                             class="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg py-2 z-50">
+                            <!-- User Info Section -->
+                            <div class="px-4 py-3">
+                                <p class="text-sm text-gray-500">Signed in as</p>
+                                <p class="text-sm font-medium text-gray-900">{{ current_user.email }}</p>
+                            </div>
+
+                            <!-- Smoking Details -->
+                            <div class="border-t border-gray-100 px-4 py-3">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Age</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.age }} years</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Smoking Since</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.smoking_since }} years</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Consumption Details -->
+                            <div class="border-t border-gray-100 px-4 py-3">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Daily Target</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.daily_cigarettes }} cigarettes</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Cost per Cigarette</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.currency }} {{ "%.2f"|format(current_user.cigarette_cost) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pack Details -->
+                            <div class="border-t border-gray-100 px-4 py-3">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Pack Cost</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.currency }} {{ "%.2f"|format(current_user.pack_cost) }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Cigarettes per Pack</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.cigarettes_per_pack }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Member Since -->
+                            <div class="border-t border-gray-100 px-4 py-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Member Since</p>
+                                        <p class="text-sm font-medium text-gray-900">{{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Profile Button -->
+                            <div class="border-t border-gray-100 px-4 py-3">
+                                <button @click="editMode = !editMode" 
+                                        class="w-full text-left px-3 py-2 text-sm text-emerald-600 hover:bg-emerald-50 rounded-md">
+                                    {{ 'Save Changes' if editMode else 'Edit Profile' }}
+                                </button>
+                            </div>
+
+                            <!-- Edit Form -->
+                            <div x-show="editMode" class="border-t border-gray-100 px-4 py-3">
+                                <form action="{{ url_for('update_profile') }}" method="POST" class="space-y-4">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm text-gray-500">Name</label>
+                                            <input type="text" name="name" value="{{ current_user.name }}" 
+                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-500">Age</label>
+                                            <input type="number" name="age" value="{{ current_user.age }}" 
+                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm text-gray-500">Smoking Since (years)</label>
+                                            <input type="number" name="smoking_since" value="{{ current_user.smoking_since }}" 
+                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-500">Daily Target</label>
+                                            <input type="number" name="daily_cigarettes" value="{{ current_user.daily_cigarettes }}" 
+                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm text-gray-500">Cost per Cigarette</label>
+                                            <input type="number" step="0.01" name="cigarette_cost" value="{{ current_user.cigarette_cost }}" 
+                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-500">Pack Cost</label>
+                                            <input type="number" step="0.01" name="pack_cost" value="{{ current_user.pack_cost }}" 
+                                                class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm text-gray-500">Cigarettes per Pack</label>
+                                        <input type="number" name="cigarettes_per_pack" value="{{ current_user.cigarettes_per_pack }}" 
+                                            class="mt-1 block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                    </div>
+
+                                    <div class="flex justify-end space-x-3">
+                                        <button type="button" @click="editMode = false" 
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" 
+                                            class="px-3 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Logout -->
+                            <div class="border-t border-gray-100">
+                                <a href="{{ url_for('logout') }}" 
+                                   class="block px-4 py-3 text-sm text-red-600 hover:bg-red-50">
+                                    Sign out
+                                </a>
+                            </div>
                         </div>
                     </div>
                     {% else %}
