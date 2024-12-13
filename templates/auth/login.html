@@ -1,101 +1,181 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl transform transition-all hover:scale-[1.01] duration-300">
-        <div class="p-8">
-            <!-- Logo/Header -->
-            <div class="text-center mb-8">
-                <svg class="mx-auto h-12 w-12 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <h2 class="mt-4 text-3xl font-extrabold text-gray-900">Welcome back</h2>
-                <p class="mt-2 text-sm text-gray-600">
-                    Sign in to your account to continue
-                </p>
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-6xl">
+        <!-- App Logo/Name -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-emerald-600 mb-2">QuitTrack</h1>
+            <p class="text-lg text-gray-600">Your Journey to a Smoke-Free Life Starts Here</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Left side: App Features -->
+            <div class="flex-1 space-y-8 px-4">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Take Control of Your Smoking Habits</h2>
+                </div>
+
+                <!-- Feature Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-emerald-100 rounded-full p-2">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="ml-4 text-lg font-medium text-gray-900">Track Progress</h3>
+                        </div>
+                        <p class="text-gray-600">Monitor your daily smoking habits and visualize your journey to quitting.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-emerald-100 rounded-full p-2">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="ml-4 text-lg font-medium text-gray-900">Cost Insights</h3>
+                        </div>
+                        <p class="text-gray-600">See how much money you're saving by reducing your cigarette consumption.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-emerald-100 rounded-full p-2">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="ml-4 text-lg font-medium text-gray-900">Daily Goals</h3>
+                        </div>
+                        <p class="text-gray-600">Set and achieve your daily smoking reduction targets.</p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-emerald-100 rounded-full p-2">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="ml-4 text-lg font-medium text-gray-900">Detailed Reports</h3>
+                        </div>
+                        <p class="text-gray-600">Get insights with comprehensive reports and analytics.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div class="bg-emerald-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-emerald-600 mb-2">1000+</div>
+                        <div class="text-sm text-gray-600">Active Users</div>
+                    </div>
+                    <div class="bg-emerald-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-emerald-600 mb-2">₹50L+</div>
+                        <div class="text-sm text-gray-600">Money Saved</div>
+                    </div>
+                    <div class="bg-emerald-50 p-6 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-emerald-600 mb-2">95%</div>
+                        <div class="text-sm text-gray-600">Success Rate</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Flash Messages -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-50 text-red-700{% else %}bg-emerald-50 text-emerald-700{% endif %} text-sm">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            <!-- Right side: Login Form -->
+            <div class="flex-1 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 max-w-md mx-auto">
+                <div class="sm:mx-auto sm:w-full sm:max-w-md mb-6">
+                    <h2 class="text-center text-2xl font-bold text-gray-900">Welcome Back</h2>
+                    <p class="mt-2 text-center text-sm text-gray-600">
+                        Continue your journey to a healthier life
+                    </p>
+                </div>
 
-            <!-- Login Form -->
-            <form class="space-y-6" action="{{ url_for('login') }}" method="POST">
-                <!-- Email Field -->
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">
-                        Email address
-                    </label>
-                    <div class="mt-1 relative">
-                        <input id="email" 
-                               name="email" 
-                               type="email" 
-                               required 
-                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200"
-                               placeholder="you@example.com">
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                            </svg>
+                <form class="space-y-6" method="POST">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                         </div>
                     </div>
-                </div>
 
-                <!-- Password Field -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">
-                        Password
-                    </label>
-                    <div class="mt-1 relative">
-                        <input id="password" 
-                               name="password" 
-                               type="password" 
-                               required 
-                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200"
-                               placeholder="•••••••">
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <div class="mt-1">
+                            <input id="password" name="password" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                         </div>
                     </div>
-                </div>
 
-                <!-- Remember Me Checkbox -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember_me" 
-                               name="remember_me" 
-                               type="checkbox"
-                               class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded transition-colors duration-200">
-                        <label for="remember_me" class="ml-2 block text-sm text-gray-700">
-                            Remember me
-                        </label>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">New to QuitTrack?</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <a href="{{ url_for('signup') }}" class="w-full flex justify-center py-2 px-4 border border-emerald-300 rounded-md shadow-sm text-sm font-medium text-emerald-600 bg-white hover:bg-emerald-50">
+                            Create an account
+                        </a>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Submit Button -->
-                <div>
-                    <button type="submit" 
-                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transform transition-all duration-200 hover:scale-[1.02]">
-                        Sign in
-                    </button>
+        <!-- Testimonials Section -->
+        <div class="mt-16">
+            <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">What Our Users Say</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">R</div>
+                        <div class="ml-4">
+                            <div class="font-medium text-gray-900">Rahul M.</div>
+                            <div class="text-sm text-gray-500">Smoke-free for 6 months</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"QuitTrack helped me visualize my progress and stay motivated. The money-saving insights were eye-opening!"</p>
                 </div>
-            </form>
 
-            <!-- Links -->
-            <div class="mt-6 flex items-center justify-center">
-                <div class="text-sm">
-                    <a href="{{ url_for('signup') }}" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors duration-200">
-                        Don't have an account? Sign up
-                    </a>
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">P</div>
+                        <div class="ml-4">
+                            <div class="font-medium text-gray-900">Priya S.</div>
+                            <div class="text-sm text-gray-500">Reduced by 80%</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The daily goals feature made it easy to gradually reduce my smoking. Best decision I've made for my health."</p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl">A</div>
+                        <div class="ml-4">
+                            <div class="font-medium text-gray-900">Amit K.</div>
+                            <div class="text-sm text-gray-500">Quit smoking completely</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The detailed reports helped me understand my triggers and patterns. Now I'm completely smoke-free!"</p>
                 </div>
             </div>
         </div>
