@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 class="text-center text-3xl font-extrabold text-gray-900">
+            Create your QuitPuff account
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+            Start tracking your journey to quit smoking
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form class="space-y-6" action="{{ url_for('signup') }}" method="POST">
+                <!-- Personal Information -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Personal Information</h3>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" name="name" id="name" required 
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                            <input type="email" name="email" id="email" required 
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <input type="password" name="password" id="password" required 
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
+                            <input type="number" name="age" id="age" required min="18" 
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smoking Details -->
+                <div class="pt-4">
+                    <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Smoking Details</h3>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="smoking_since" class="block text-sm font-medium text-gray-700">
+                                How many years have you been smoking?
+                            </label>
+                            <input type="number" name="smoking_since" id="smoking_since" required min="0" 
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="daily_cigarettes" class="block text-sm font-medium text-gray-700">
+                                Daily cigarettes consumption
+                            </label>
+                            <input type="number" name="daily_cigarettes" id="daily_cigarettes" required min="1" 
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Information -->
+                <div class="pt-4">
+                    <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Cost Information</h3>
+                    <div class="mt-4 space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="cigarette_cost" class="block text-sm font-medium text-gray-700">
+                                    Cost per cigarette
+                                </label>
+                                <div class="mt-1 relative rounded-md shadow-sm">
+                                    <input type="number" step="0.01" name="cigarette_cost" id="cigarette_cost" required 
+                                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="currency" class="block text-sm font-medium text-gray-700">Currency</label>
+                                <select name="currency" id="currency" 
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                                    <option value="INR">INR (₹)</option>
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="GBP">GBP (£)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="pack_cost" class="block text-sm font-medium text-gray-700">
+                                    Cost per pack
+                                </label>
+                                <input type="number" step="0.01" name="pack_cost" id="pack_cost" required 
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="cigarettes_per_pack" class="block text-sm font-medium text-gray-700">
+                                    Cigarettes per pack
+                                </label>
+                                <input type="number" name="cigarettes_per_pack" id="cigarettes_per_pack" required 
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Already have an account?</span>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="{{ url_for('login') }}" 
+                        class="w-full flex justify-center py-2 px-4 border border-emerald-300 rounded-md shadow-sm text-sm font-medium text-emerald-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Sign in
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
