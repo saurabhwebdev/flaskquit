@@ -113,3 +113,37 @@
             Total Saved: 252.0
             Yearly Projection: 91980.0
              [in C:\WebDev\CTF\app.py:646]
+2024-12-15 21:38:42,343 INFO: Cigarette Tracker startup [in C:\WebDev\CTF\app.py:38]
+2024-12-15 21:38:42,380 INFO: Database initialized successfully [in C:\WebDev\CTF\app.py:46]
+2024-12-15 21:38:42,386 INFO: Database tables created successfully [in C:\WebDev\CTF\app.py:55]
+2024-12-15 21:38:43,360 INFO: Cigarette Tracker startup [in C:\WebDev\CTF\app.py:38]
+2024-12-15 21:38:43,386 INFO: Database initialized successfully [in C:\WebDev\CTF\app.py:46]
+2024-12-15 21:38:43,389 INFO: Database tables created successfully [in C:\WebDev\CTF\app.py:55]
+2024-12-15 21:38:44,632 INFO: 
+            Stats for user test1@gmail.com:
+            Total Target: 15
+            Actually Not Smoked: 14
+            Total Saved: 252.0
+            Yearly Projection: 91980.0
+             [in C:\WebDev\CTF\app.py:646]
+2024-12-15 21:39:40,068 INFO: 
+            Stats for user test1@gmail.com:
+            Total Target: 15
+            Actually Not Smoked: 14
+            Total Saved: 252.0
+            Yearly Projection: 91980.0
+             [in C:\WebDev\CTF\app.py:646]
+2024-12-15 21:41:08,179 INFO: 
+            Stats for user test1@gmail.com:
+            Total Target: 15
+            Actually Not Smoked: 14
+            Total Saved: 252.0
+            Yearly Projection: 91980.0
+             [in C:\WebDev\CTF\app.py:646]
+2024-12-15 21:42:09,540 INFO: 
+            Stats for user test1@gmail.com:
+            Total Target: 15
+            Actually Not Smoked: 14
+            Total Saved: 252.0
+            Yearly Projection: 91980.0
+             [in C:\WebDev\CTF\app.py:646]
