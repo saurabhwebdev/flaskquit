@@ -12,6 +12,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # Configure logging
 if not app.debug:
@@ -508,6 +510,167 @@ def create_admin(token):
             flash(f'Error: {str(e)}', 'error')
 
     return render_template('admin/create_admin.html')
+
+def calculate_total_saved(user):
+    """Calculate total money saved based on daily target vs actual consumption"""
+    # Get all entries for the user
+    entries = CigaretteEntry.query.filter_by(user_id=user.id).all()
+    
+    # Group entries by date
+    entries_by_date = {}
+    for entry in entries:
+        date = entry.timestamp.date()
+        if date not in entries_by_date:
+            entries_by_date[date] = 0
+        entries_by_date[date] += entry.count
+    
+    total_saved = 0
+    # Calculate savings for days with entries
+    for date, count in entries_by_date.items():
+        daily_target_cost = user.daily_cigarettes * user.cigarette_cost
+        daily_actual_cost = count * user.cigarette_cost
+        daily_saved = daily_target_cost - daily_actual_cost
+        total_saved += daily_saved
+        app.logger.debug(f"Date: {date}, Target Cost: {daily_target_cost}, Actual Cost: {daily_actual_cost}, Saved: {daily_saved}")
+    
+    # Calculate savings for days with no entries
+    if entries:
+        first_entry = min(entries_by_date.keys())
+        last_entry = max(entries_by_date.keys())
+        total_days = (last_entry - first_entry).days + 1
+        days_with_entries = len(entries_by_date)
+        days_without_entries = total_days - days_with_entries
+        
+        # For days with no entries, all daily target money was saved
+        zero_consumption_saved = days_without_entries * (user.daily_cigarettes * user.cigarette_cost)
+        total_saved += zero_consumption_saved
+        
+        app.logger.debug(f"""
+            Days without Entries: {days_without_entries}
+            Additional Savings: {zero_consumption_saved}
+            Total Saved: {total_saved}
+        """)
+    
+    return total_saved
+
+def calculate_yearly_projection(user):
+    """Calculate yearly money savings projection based on current habits"""
+    # Get entries from the last 30 days to calculate average daily savings
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+    recent_entries = CigaretteEntry.query.filter(
+        CigaretteEntry.user_id == user.id,
+        CigaretteEntry.timestamp >= thirty_days_ago
+    ).all()
+    
+    # Group entries by date
+    entries_by_date = {}
+    for entry in recent_entries:
+        date = entry.timestamp.date()
+        if date not in entries_by_date:
+            entries_by_date[date] = 0
+        entries_by_date[date] += entry.count
+    
+    # Calculate average daily savings
+    total_days = len(entries_by_date) or 1  # Avoid division by zero
+    total_saved = 0
+    
+    for count in entries_by_date.values():
+        daily_target_cost = user.daily_cigarettes * user.cigarette_cost
+        daily_actual_cost = count * user.cigarette_cost
+        total_saved += daily_target_cost - daily_actual_cost
+    
+    avg_daily_savings = total_saved / total_days
+    yearly_projection = avg_daily_savings * 365
+    
+    return yearly_projection
+
+def calculate_cigarettes_avoided(user):
+    """Calculate total cigarettes not smoked since tracking started"""
+    # Get all entries for the user
+    entries = CigaretteEntry.query.filter_by(user_id=user.id).all()
+    
+    # Get the start date (either first entry or user creation date)
+    start_date = user.created_at.date()
+    if entries:
+        first_entry_date = min(entry.timestamp.date() for entry in entries)
+        start_date = min(start_date, first_entry_date)
+    
+    # Calculate total days since tracking started
+    today = datetime.now().date()
+    total_days = (today - start_date).days + 1
+    
+    # Group entries by date
+    entries_by_date = {}
+    for entry in entries:
+        date = entry.timestamp.date()
+        if date not in entries_by_date:
+            entries_by_date[date] = 0
+        entries_by_date[date] += entry.count
+    
+    total_not_smoked = 0
+    total_target = 0
+    
+    # Calculate for each day since start
+    for day_offset in range(total_days):
+        current_date = start_date + timedelta(days=day_offset)
+        daily_target = user.daily_cigarettes
+        smoked_count = entries_by_date.get(current_date, 0)
+        
+        # Add to total target
+        total_target += daily_target
+        # Add to not smoked (target - actual)
+        not_smoked_today = daily_target - smoked_count
+        total_not_smoked += not_smoked_today
+        
+        app.logger.debug(f"""
+            Date: {current_date}
+            Daily Target: {daily_target}
+            Actually Smoked: {smoked_count}
+            Not Smoked Today: {not_smoked_today}
+            Running Total Not Smoked: {total_not_smoked}
+            Running Total Target: {total_target}
+        """)
+    
+    return total_not_smoked, total_target
+
+@app.context_processor
+def inject_stats():
+    if current_user.is_authenticated:
+        try:
+            # Calculate cigarettes avoided and total target
+            cigarettes_avoided, total_target = calculate_cigarettes_avoided(current_user)
+            total_saved = calculate_total_saved(current_user)
+            yearly_projection = calculate_yearly_projection(current_user)
+            
+            # Log the final stats
+            app.logger.info(f"""
+            Stats for user {current_user.email}:
+            Total Target: {total_target}
+            Actually Not Smoked: {cigarettes_avoided}
+            Total Saved: {total_saved}
+            Yearly Projection: {yearly_projection}
+            """)
+            
+            return {
+                'total_cigarettes': cigarettes_avoided,
+                'total_target': total_target,
+                'total_saved': total_saved,
+                'yearly_projection': yearly_projection
+            }
+        except Exception as e:
+            app.logger.error(f"Error calculating stats: {str(e)}")
+            return {
+                'total_cigarettes': 0,
+                'total_target': 0,
+                'total_saved': 0.0,
+                'yearly_projection': 0.0
+            }
+    return {
+        'total_cigarettes': 0,
+        'total_target': 0,
+        'total_saved': 0.0,
+        'yearly_projection': 0.0
+    }
 
 if __name__ == '__main__':
     app.run(debug=True) 

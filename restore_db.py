@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 load_dotenv()
 
@@ -66,6 +67,7 @@ def restore_database():
             print(f"Found {len(data['users'])} users and {len(data['entries'])} entries in backup file")
             
             # Restore Users
+            max_user_id = 0
             for user_data in data['users']:
                 user = User(
                     id=user_data['id'],
@@ -80,15 +82,22 @@ def restore_database():
                     pack_cost=user_data['pack_cost'],
                     cigarettes_per_pack=user_data['cigarettes_per_pack'],
                     created_at=datetime.fromisoformat(user_data['created_at']),
-                    is_admin=user_data.get('is_admin', False)  # Default to False if not present in backup
+                    is_admin=user_data.get('is_admin', False)
                 )
+                max_user_id = max(max_user_id, user_data['id'])
                 db.session.add(user)
             
             # Commit users first to maintain referential integrity
             db.session.commit()
             print("Users restored successfully!")
             
+            # Reset the users id sequence
+            db.session.execute(text(f"ALTER SEQUENCE users_id_seq RESTART WITH {max_user_id + 1}"))
+            db.session.commit()
+            print(f"Reset users sequence to {max_user_id + 1}")
+            
             # Restore Entries
+            max_entry_id = 0
             for entry_data in data['entries']:
                 entry = CigaretteEntry(
                     id=entry_data['id'],
@@ -96,10 +105,17 @@ def restore_database():
                     count=entry_data['count'],
                     timestamp=datetime.fromisoformat(entry_data['timestamp'])
                 )
+                max_entry_id = max(max_entry_id, entry_data['id'])
                 db.session.add(entry)
             
             # Commit all changes
             db.session.commit()
+            
+            # Reset the entries id sequence
+            db.session.execute(text(f"ALTER SEQUENCE cigarette_entries_id_seq RESTART WITH {max_entry_id + 1}"))
+            db.session.commit()
+            print(f"Reset entries sequence to {max_entry_id + 1}")
+            
             print("Entries restored successfully!")
             print("Database restore completed!")
             

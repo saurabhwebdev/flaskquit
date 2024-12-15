@@ -1,4 +1,20 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@quitpuff.com",
+      "password": "pbkdf2:sha256:600000$GpuZgqyVZtrqK83z$67ab38db7aee7c85a5b68a86a5eff735c2b1402598de22e44a36d81456fdff21",
+      "name": "Admin User",
+      "age": 30,
+      "smoking_since": 0,
+      "daily_cigarettes": 0,
+      "cigarette_cost": 0.0,
+      "currency": "INR",
+      "pack_cost": 0.0,
+      "cigarettes_per_pack": 0,
+      "created_at": "2024-12-13T11:01:58.571043",
+      "is_admin": true
+    }
+  ],
   "entries": []
 }
