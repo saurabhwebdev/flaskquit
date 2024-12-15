@@ -384,34 +384,29 @@
                 yearlyProjection: '{{ current_user.currency }} {{ "%.2f"|format(yearly_projection) }}'
             };
             
-            return `I've saved ${stats.saved} by not smoking ${stats.cigarettes} out of ${stats.target} cigarettes (daily target: ${stats.daily_target})! On track to save ${stats.yearlyProjection} this year with QuitPuff! 🚭`;
+            return `I've saved ${stats.saved} by not smoking ${stats.cigarettes} out of ${stats.target} cigarettes (daily target: ${stats.daily_target})! On track to save ${stats.yearlyProjection} this year with QuitPuff! 🚭https://ct-qwqm.onrender.com/`;
         }
 
         function shareToTwitter() {
             const text = getShareText();
-            const url = window.location.origin;
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`);
         }
 
         function shareToWhatsApp() {
             const text = getShareText();
-            const url = window.location.origin;
-            const fullText = `${text}\n${url}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`);
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
         }
 
         function shareToFacebook() {
-            const url = window.location.origin;
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+            const text = getShareText();
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=https://ct-qwqm.onrender.com/&quote=${encodeURIComponent(text)}`);
         }
 
         async function copyToClipboard() {
             const text = getShareText();
-            const url = window.location.origin;
-            const fullText = `${text}\n${url}`;
             
             try {
-                await navigator.clipboard.writeText(fullText);
+                await navigator.clipboard.writeText(text);
                 
                 // Show success message
                 const button = document.querySelector('[onclick="copyToClipboard()"]');
@@ -425,7 +420,7 @@
             } catch (err) {
                 // Fallback for older browsers
                 const textArea = document.createElement('textarea');
-                textArea.value = fullText;
+                textArea.value = text;
                 document.body.appendChild(textArea);
                 textArea.select();
                 try {
