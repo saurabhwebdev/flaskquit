@@ -89,6 +89,7 @@
 
     <!-- Action Buttons -->
     <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+        <!-- Add Cigarette Button -->
         <form action="{{ url_for('add_cigarette') }}" method="POST" class="w-full sm:w-auto">
             <button type="submit" 
                 class="w-full sm:w-auto group relative flex justify-center items-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-sm sm:text-base font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-150">
@@ -99,38 +100,50 @@
             </button>
         </form>
 
-        <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto bg-white p-3 rounded-lg shadow-sm">
-            <form action="{{ url_for('dashboard') }}" method="GET" class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
-                <div class="flex items-center space-x-2 w-full sm:w-auto">
-                    <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter by Date</span>
-                    <div class="relative flex-grow sm:flex-grow-0">
+        <!-- New Filter Design -->
+        <div class="flex items-center space-x-4 bg-white rounded-lg shadow-sm p-2">
+            <div class="flex items-center space-x-3">
+                <span class="text-sm font-medium text-gray-700">View:</span>
+                <div class="flex rounded-lg shadow-sm">
+                    <a href="{{ url_for('dashboard') }}" 
+                       class="px-4 py-2 text-sm font-medium {% if not selected_date %}bg-emerald-100 text-emerald-800 border-emerald-200{% else %}bg-white text-gray-700 hover:bg-gray-50 border-gray-200{% endif %} border rounded-l-lg">
+                        All Time
+                    </a>
+                    <a href="{{ url_for('dashboard', date=today.strftime('%Y-%m-%d')) }}" 
+                       class="px-4 py-2 text-sm font-medium {% if selected_date and selected_date == today %}bg-emerald-100 text-emerald-800 border-emerald-200{% else %}bg-white text-gray-700 hover:bg-gray-50 border-gray-200{% endif %} border-t border-b">
+                        Today
+                    </a>
+                    <div class="relative">
                         <input type="date" 
                                id="date-filter" 
                                name="date" 
                                value="{{ selected_date.strftime('%Y-%m-%d') if selected_date else '' }}"
-                               class="form-input rounded-md shadow-sm">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                            <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="hidden"
+                               onchange="if(this.value) window.location.href='{{ url_for('dashboard') }}?date=' + this.value">
+                        <button onclick="document.getElementById('date-filter').showPicker()" 
+                                class="px-4 py-2 text-sm font-medium {% if selected_date and selected_date != today %}bg-emerald-100 text-emerald-800 border-emerald-200{% else %}bg-white text-gray-700 hover:bg-gray-50 border-gray-200{% endif %} border rounded-r-lg inline-flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                        </div>
+                            Custom
+                        </button>
                     </div>
                 </div>
-                <div class="flex space-x-2 w-full sm:w-auto">
-                    <button type="submit" class="flex-1 sm:flex-none inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-emerald-300 rounded-md shadow-sm text-sm font-medium text-emerald-700 bg-white hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-150">
-                        <svg class="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                        </svg>
-                        Filter
-                    </button>
-                    {% if selected_date %}
-                    <a href="{{ url_for('dashboard') }}" 
-                       class="flex-1 sm:flex-none inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-150">
-                        Clear
-                    </a>
-                    {% endif %}
-                </div>
-            </form>
+            </div>
+
+            {% if selected_date %}
+            <div class="flex items-center">
+                <span class="text-sm text-gray-500 mr-2">
+                    Showing: {{ selected_date.strftime('%b %d, %Y') }}
+                </span>
+                <a href="{{ url_for('dashboard') }}" 
+                   class="inline-flex items-center p-1 rounded-full text-gray-400 hover:text-gray-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
 
