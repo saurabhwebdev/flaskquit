@@ -229,14 +229,10 @@ def dashboard():
     is_filtered = False
     
     if selected_date:
-        try:
-            filter_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
-            entries_query = entries_query.filter(
-                db.func.date(CigaretteEntry.timestamp) == filter_date
-            )
-            is_filtered = True
-        except ValueError:
-            flash('Invalid date format', 'error')
+        entries_query = entries_query.filter(
+            db.func.date(CigaretteEntry.timestamp) == selected_date
+        )
+        is_filtered = True
     
     # Pagination parameters
     page = request.args.get('page', 1, type=int)
