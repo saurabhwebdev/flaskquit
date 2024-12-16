@@ -105,9 +105,10 @@
                     <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter by Date</span>
                     <div class="relative flex-grow sm:flex-grow-0">
                         <input type="date" 
-                               name="date"
-                               class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 rounded-md"
-                               value="{{ selected_date if selected_date else '' }}">
+                               id="date-filter" 
+                               name="date" 
+                               value="{{ selected_date.strftime('%Y-%m-%d') if selected_date else '' }}"
+                               class="form-input rounded-md shadow-sm">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                             <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -362,4 +363,13 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+function applyFilter() {
+    const dateInput = document.getElementById('date-filter');
+    if (dateInput.value) {
+        window.location.href = "{{ url_for('dashboard') }}?date=" + dateInput.value;
+    }
+}
+</script>
 {% endblock %} 

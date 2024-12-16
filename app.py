@@ -215,12 +215,15 @@ def dashboard():
     # Get today's date
     today = datetime.now(pytz.UTC).date()
     
-    # Get the selected date from query parameters, default to today
-    selected_date_str = request.args.get('date', today.strftime('%Y-%m-%d'))
-    try:
-        selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
-    except ValueError:
-        selected_date = today
+    # Get the selected date from query parameters, default to None
+    selected_date_str = request.args.get('date')
+    selected_date = None
+    
+    if selected_date_str:
+        try:
+            selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            selected_date = None
 
     # Base query for entries
     entries_query = CigaretteEntry.query.filter_by(user_id=current_user.id)
@@ -228,6 +231,7 @@ def dashboard():
     # Initialize filter flag
     is_filtered = False
     
+    # Only apply date filter if a date is selected
     if selected_date:
         entries_query = entries_query.filter(
             db.func.date(CigaretteEntry.timestamp) == selected_date
@@ -302,6 +306,7 @@ def dashboard():
                          today_count=today_count,
                          today=today,
                          selected_date=selected_date,
+                         is_filtered=is_filtered,
                          today_entries=paginated_entries.items,
                          pagination=paginated_entries,
                          per_page=per_page)
