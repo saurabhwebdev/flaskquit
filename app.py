@@ -10,10 +10,14 @@ from datetime import datetime, timedelta
 import pytz
 import logging
 from logging.handlers import RotatingFileHandler
+from jinja2 import Environment
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+# Register min and max functions with Jinja2
+app.jinja_env.globals.update(min=min, max=max)
 
 # Configure logging
 if not app.debug:
@@ -47,6 +51,17 @@ try:
 except Exception as e:
     app.logger.error(f'Error initializing database: {str(e)}')
     raise
+
+# Add this after database initialization
+@app.before_request
+def before_request():
+    try:
+        # Test database connection
+        db.session.execute('SELECT 1')
+        app.logger.debug('Database connection successful')
+    except Exception as e:
+        app.logger.error(f'Database connection failed: {str(e)}')
+        return 'Database connection error', 500
 
 # Create tables if they don't exist
 with app.app_context():
@@ -198,11 +213,15 @@ def logout():
 @login_required
 def dashboard():
     # Get today's date
-    today = datetime.now().date()
+    today = datetime.now(pytz.UTC).date()
     
-    # Get selected date from query parameters
-    selected_date = request.args.get('date')
-    
+    # Get the selected date from query parameters, default to today
+    selected_date_str = request.args.get('date', today.strftime('%Y-%m-%d'))
+    try:
+        selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+    except ValueError:
+        selected_date = today
+
     # Base query for entries
     entries_query = CigaretteEntry.query.filter_by(user_id=current_user.id)
     
