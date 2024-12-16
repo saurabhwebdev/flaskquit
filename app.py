@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, CigaretteEntry
 from flask_migrate import Migrate
 from functools import wraps
-from sqlalchemy import func
+from sqlalchemy import func, text
 import os
 from datetime import datetime, timedelta
 import pytz
@@ -56,8 +56,8 @@ except Exception as e:
 @app.before_request
 def before_request():
     try:
-        # Test database connection
-        db.session.execute('SELECT 1')
+        # Test database connection using proper text() wrapper
+        db.session.execute(text('SELECT 1'))
         app.logger.debug('Database connection successful')
     except Exception as e:
         app.logger.error(f'Database connection failed: {str(e)}')
